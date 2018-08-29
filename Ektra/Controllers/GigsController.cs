@@ -15,6 +15,7 @@ namespace Ektra.Controllers
             _context = new ApplicationDbContext();
         }
 
+        [Authorize]
         public ActionResult Create()
         {
             var viewModel = new GigFormViewModel
@@ -25,6 +26,7 @@ namespace Ektra.Controllers
             return View(viewModel);
         }
 
+        [Authorize]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult Create(GigFormViewModel viewModel)
