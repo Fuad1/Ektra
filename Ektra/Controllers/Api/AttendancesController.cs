@@ -4,7 +4,7 @@ using Microsoft.AspNet.Identity;
 using System.Linq;
 using System.Web.Http;
 
-namespace Ektra.Controllers
+namespace Ektra.Controllers.Api
 {
     [Authorize]
     public class AttendancesController : ApiController

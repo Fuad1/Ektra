@@ -23,7 +23,10 @@ namespace Ektra.Controllers
             var userId = User.Identity.GetUserId();
 
             var gigs = _context.Gigs
-                .Where(g => g.ArtistId == userId && g.DateTime > DateTime.Now)
+                .Where(g =>
+                    g.ArtistId == userId &&
+                    g.DateTime > DateTime.Now &&
+                    !g.IsCanceled)
                 .Include(g => g.Genre)
                 .ToList();
 
@@ -50,6 +53,12 @@ namespace Ektra.Controllers
             };
 
             return View("Gigs", viewModel);
+        }
+
+        [HttpPost]
+        public ActionResult SearchGigs(GigsViewModel viewModel)
+        {
+            return RedirectToAction("Index", "Home", new { query = viewModel.SearchTerm });
         }
 
         [Authorize]
@@ -97,7 +106,6 @@ namespace Ektra.Controllers
                 return View("GigForm", viewModel);
             }
 
-
             var gig = new Gig
             {
                 ArtistId = User.Identity.GetUserId(),
@@ -125,11 +133,11 @@ namespace Ektra.Controllers
             }
 
             var userId = User.Identity.GetUserId();
+            var gig = _context.Gigs
+                .Include(g => g.Attendances.Select(a => a.Attendee))
+                .Single(g => g.Id == viewModel.Id && g.ArtistId == userId);
 
-            var gig = _context.Gigs.Single(g => g.Id == viewModel.Id && g.ArtistId == userId);
-            gig.DateTime = viewModel.GetDateTime();
-            gig.Venue = viewModel.Venue;
-            gig.GenreId = viewModel.Genre;
+            gig.Modify(viewModel.GetDateTime(), viewModel.Venue, viewModel.Genre);
 
             _context.SaveChanges();
 
