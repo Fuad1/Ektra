@@ -7,6 +7,13 @@ namespace Ektra
         // For more information on bundling, visit https://go.microsoft.com/fwlink/?LinkId=301862
         public static void RegisterBundles(BundleCollection bundles)
         {
+            bundles.Add(new ScriptBundle("~/bundles/app").Include(
+                        "~/Scripts/app/services/attendanceService.js",
+                        "~/Scripts/app/services/followingService.js",
+                        "~/Scripts/app/controllers/gigsController.js",
+                        "~/Scripts/app/controllers/gigDetailsController.js",
+                        "~/Scripts/app/app.js"));
+
             bundles.Add(new ScriptBundle("~/bundles/lib").Include(
                         "~/Scripts/jquery-{version}.js",
                         "~/Scripts/moment.js",
@@ -24,7 +31,7 @@ namespace Ektra
                         "~/Scripts/modernizr-*"));
 
             bundles.Add(new StyleBundle("~/Content/css").Include(
-                      "~/Content/bootstrap.css",                      
+                      "~/Content/bootstrap.css",
                       "~/Content/site.css",
                       "~/Content/animate.css"));
         }

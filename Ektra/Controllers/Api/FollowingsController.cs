@@ -1,18 +1,18 @@
-﻿using Ektra.Dtos;
-using Ektra.Models;
+﻿using Ektra.Core;
+using Ektra.Core.Dtos;
+using Ektra.Core.Models;
 using Microsoft.AspNet.Identity;
-using System.Linq;
 using System.Web.Http;
 
 namespace Ektra.Controllers.Api
 {
     public class FollowingsController : ApiController
     {
-        private readonly ApplicationDbContext _context;
+        public readonly IUnitOfWork _unitOfWork;
 
-        public FollowingsController()
+        public FollowingsController(IUnitOfWork unitOfWork)
         {
-            _context = new ApplicationDbContext();
+            _unitOfWork = unitOfWork;
         }
 
         [HttpPost]
@@ -20,19 +20,36 @@ namespace Ektra.Controllers.Api
         {
             var userId = User.Identity.GetUserId();
 
-            if (_context.Followings.Any(f => f.FolloweeId == userId && f.FolloweeId == dto.FolloweeId))
-                return BadRequest("Following alreadt exists.");
+            var following = _unitOfWork.Followings.GetFollowing(dto.FolloweeId, userId);
+            if (following != null)
+                return BadRequest("Following already exists.");
 
-            var following = new Following
+             following = new Following
             {
                 FollowerId = userId,
                 FolloweeId = dto.FolloweeId
             };
 
-            _context.Followings.Add(following);
-            _context.SaveChanges();
+            _unitOfWork.Followings.Add(following);
+            _unitOfWork.Complete();
 
             return Ok();
+        }
+
+        [HttpDelete]
+        public IHttpActionResult UnFollow(string id)
+        {
+            var userId = User.Identity.GetUserId();
+
+            var following = _unitOfWork.Followings.GetFollowing(id, userId);
+
+            if (following == null)
+                return NotFound();
+
+            _unitOfWork.Followings.Remove(following);
+            _unitOfWork.Complete();
+
+            return Ok(id);
         }
     }
 }

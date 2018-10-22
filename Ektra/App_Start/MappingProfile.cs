@@ -1,6 +1,6 @@
 ﻿using AutoMapper;
-using Ektra.Dtos;
-using Ektra.Models;
+using Ektra.Core.Dtos;
+using Ektra.Core.Models;
 
 namespace Ektra
 {

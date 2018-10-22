@@ -1,7 +1,7 @@
-﻿using Ektra.Dtos;
-using Ektra.Models;
+﻿using Ektra.Core;
+using Ektra.Core.Dtos;
+using Ektra.Core.Models;
 using Microsoft.AspNet.Identity;
-using System.Linq;
 using System.Web.Http;
 
 namespace Ektra.Controllers.Api
@@ -9,11 +9,11 @@ namespace Ektra.Controllers.Api
     [Authorize]
     public class AttendancesController : ApiController
     {
-        private readonly ApplicationDbContext _context;
+        private readonly IUnitOfWork _unitOfWork;
 
-        public AttendancesController()
+        public AttendancesController(IUnitOfWork unitOfWork)
         {
-            _context = new ApplicationDbContext();
+            _unitOfWork = unitOfWork;
         }
 
         [HttpPost]
@@ -21,19 +21,36 @@ namespace Ektra.Controllers.Api
         {
             var userId = User.Identity.GetUserId();
 
-            if (_context.Attendances.Any(a => a.AttendeeId == userId && a.GigId == attendanceDto.GigId))
+            var attendance = _unitOfWork.Attendances.GetAttendance(attendanceDto.GigId, userId);
+            if (attendance != null)
                 return BadRequest("The attendance already exists.");
 
-            var attendance = new Attendance
+            attendance = new Attendance
             {
                 GigId = attendanceDto.GigId,
                 AttendeeId = userId
             };
 
-            _context.Attendances.Add(attendance);
-            _context.SaveChanges();
+            _unitOfWork.Attendances.Add(attendance);
+            _unitOfWork.Complete();
 
             return Ok();
+        }
+
+        [HttpDelete]
+        public IHttpActionResult DeleteAttendance(int id)
+        {
+            var userId = User.Identity.GetUserId();
+
+            var attendance = _unitOfWork.Attendances.GetAttendance(id, userId);
+
+            if (attendance == null)
+                return NotFound();
+
+            _unitOfWork.Attendances.Remove(attendance);
+            _unitOfWork.Complete();
+
+            return Ok(id);
         }
     }
 }

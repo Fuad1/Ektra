@@ -1,7 +1,5 @@
-﻿using Ektra.Models;
+﻿using Ektra.Core;
 using Microsoft.AspNet.Identity;
-using System.Data.Entity;
-using System.Linq;
 using System.Web.Http;
 
 namespace Ektra.Controllers.Api
@@ -9,11 +7,11 @@ namespace Ektra.Controllers.Api
     //[Authorize]
     public class GigsController : ApiController
     {
-        private readonly ApplicationDbContext _context;
+        private readonly IUnitOfWork _unitOfWork;
 
-        public GigsController()
+        public GigsController(IUnitOfWork unitOfWork)
         {
-            _context = new ApplicationDbContext();
+            _unitOfWork = unitOfWork;
         }
 
         [HttpDelete]
@@ -21,20 +19,21 @@ namespace Ektra.Controllers.Api
         {
             var userId = User.Identity.GetUserId();
 
-            var gig = _context.Gigs
-                .Include(g => g.Attendances.Select(a => a.Attendee))
-                .Single(g => g.Id == id && g.ArtistId == userId);
+            var gig = _unitOfWork.Gigs.GetGigWithAttendances(id);
 
-            if (gig.IsCanceled)
+            if (gig == null || gig.IsCanceled)
                 return NotFound();
+
+            if (gig.ArtistId != userId)
+                return Unauthorized();
 
             gig.Cancel();
 
-            _context.SaveChanges();
+            _unitOfWork.Complete();
 
             return Ok();
         }
 
-      
+
     }
 }

@@ -5,6 +5,10 @@ VisualStudioVersion = 15.0.27130.2024
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ektra", "Ektra\Ektra.csproj", "{87F423AE-254C-4102-8296-5DA2C1917FB4}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ektra.Tests", "Ektra.Tests\Ektra.Tests.csproj", "{AB529F7B-CE17-446A-B7C5-37D485FCB56D}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ektra.IntegrationTests", "Ektra.IntegrationTests\Ektra.IntegrationTests.csproj", "{5C34A474-96C6-4ED1-9457-5240F0F6837C}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -15,6 +19,14 @@ Global
 		{87F423AE-254C-4102-8296-5DA2C1917FB4}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{87F423AE-254C-4102-8296-5DA2C1917FB4}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{87F423AE-254C-4102-8296-5DA2C1917FB4}.Release|Any CPU.Build.0 = Release|Any CPU
+		{AB529F7B-CE17-446A-B7C5-37D485FCB56D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{AB529F7B-CE17-446A-B7C5-37D485FCB56D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{AB529F7B-CE17-446A-B7C5-37D485FCB56D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{AB529F7B-CE17-446A-B7C5-37D485FCB56D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5C34A474-96C6-4ED1-9457-5240F0F6837C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5C34A474-96C6-4ED1-9457-5240F0F6837C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5C34A474-96C6-4ED1-9457-5240F0F6837C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5C34A474-96C6-4ED1-9457-5240F0F6837C}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
